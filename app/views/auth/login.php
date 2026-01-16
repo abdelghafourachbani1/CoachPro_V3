@@ -5,19 +5,34 @@
     <div class="auth-card">
         <h1>Connexion</h1>
 
-        <?php if (isset($error)): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+        <?php
+        $errors = Session::get('errors', []);
+        $old = Session::get('old', []);
+        Session::delete('errors');
+        Session::delete('old');
+        ?>
+
+        <?php if ($error = Session::getFlash('error')): ?>
+            <div class="alert alert-error"><?= Security::escape($error) ?></div>
         <?php endif; ?>
 
-        <form action="/sport-mvc/public/index.php?url=auth/doLogin" method="POST">
+        <form action="/coachproV3/public/index.php?url=auth/doLogin" method="POST">
+            <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
+
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" value="<?= Security::escape($old['email'] ?? '') ?>" required>
+                <?php if (isset($errors['email'])): ?>
+                    <span class="error-message"><?= $errors['email'] ?></span>
+                <?php endif; ?>
             </div>
 
             <div class="form-group">
                 <label for="mot_de_passe">Mot de passe</label>
                 <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                <?php if (isset($errors['mot_de_passe'])): ?>
+                    <span class="error-message"><?= $errors['mot_de_passe'] ?></span>
+                <?php endif; ?>
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">Se connecter</button>

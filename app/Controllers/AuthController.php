@@ -1,12 +1,12 @@
 <?php
 
-require_once __DIR__ . '/../Models/database.php';
-require_once __DIR__ . '/../Models/user.php';
-require_once __DIR__ . '/../Models/coach.php';
-require_once __DIR__ . '/../Models/sportif.php';
-require_once __DIR__ . '/../../core/security.php';
-require_once __DIR__ . '/../../core/session.php';
-require_once __DIR__ . '/../../core/validator.php';
+require_once __DIR__ . '/../Models/Database.php';
+require_once __DIR__ . '/../Models/User.php';
+require_once __DIR__ . '/../Models/Coach.php';
+require_once __DIR__ . '/../Models/Sportif.php';
+require_once __DIR__ . '/../../core/Security.php';
+require_once __DIR__ . '/../../core/Session.php';
+require_once __DIR__ . '/../../core/Validator.php';
 require_once 'Controller.php';
 
 class AuthController extends Controller {
@@ -28,12 +28,12 @@ class AuthController extends Controller {
         Session::start();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/coachproV3/public/index.php?url=auth/login');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/login');
         }
 
         if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
             Session::setFlash('error', 'Token CSRF invalide');
-            $this->redirect('/coachproV3/public/index.php?url=auth/login');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/login');
         }
 
         $email = Security::sanitize($_POST['email'] ?? '');
@@ -47,7 +47,7 @@ class AuthController extends Controller {
         if ($validator->fails()) {
             Session::set('errors', $validator->errors());
             Session::set('old', ['email' => $email]);
-            $this->redirect('/coachproV3/public/index.php?url=auth/login');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/login');
         }
 
         $userModel = new User();
@@ -66,7 +66,7 @@ class AuthController extends Controller {
         } else {
             Session::setFlash('error', 'Email ou mot de passe incorrect');
             Session::set('old', ['email' => $email]);
-            $this->redirect('/coachproV3/public/index.php?url=auth/login');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/login');
         }
     }
 
@@ -85,12 +85,12 @@ class AuthController extends Controller {
         Session::start();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/coachproV3/public/index.php?url=auth/register');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/register');
         }
 
         if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
             Session::setFlash('error', 'Token CSRF invalide');
-            $this->redirect('/coachprov3/public/index.php?url=auth/register');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/register');
         }
 
         $data = Security::sanitize($_POST);
@@ -117,14 +117,14 @@ class AuthController extends Controller {
         if ($validator->fails()) {
             Session::set('errors', $validator->errors());
             Session::set('old', $data);
-            $this->redirect('/coachproV3/public/index.php?url=auth/register');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/register');
         }
 
         $userModel = new User();
         if ($userModel->getByEmail($data['email'])) {
             Session::setFlash('error', 'Cet email est déjà utilisé');
             Session::set('old', $data);
-            $this->redirect('/coachproV3/public/index.php?url=auth/register');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/register');
         }
 
         try {
@@ -149,7 +149,7 @@ class AuthController extends Controller {
         } catch (Exception $e) {
             Session::setFlash('error', 'Une erreur est survenue lors de l\'inscription');
             Session::set('old', $data);
-            $this->redirect('/coachproV3/public/index.php?url=auth/register');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/register');
         }
     }
 
@@ -159,16 +159,16 @@ class AuthController extends Controller {
         Session::destroy();
         session_start();
         Session::setFlash('success', 'Déconnexion réussie');
-        $this->redirect('/coachproV3/public/index.php?url=auth/login');
+        $this->redirect('/CoachPro_V3/public/index.php?url=auth/login');
     }
 
     private function redirectByRole()
     {
         $role = Session::get('user_role');
         if ($role === 'coach') {
-            $this->redirect('/coachproV3/public/index.php?url=coach/profile');
+            $this->redirect('/CoachPro_V3/public/index.php?url=coach/profile');
         } else {
-            $this->redirect('/coachproV3/public/index.php?url=sportif/coaches');
+            $this->redirect('/CoachPro_V3/public/index.php?url=sportif/coaches');
         }
     }
 }

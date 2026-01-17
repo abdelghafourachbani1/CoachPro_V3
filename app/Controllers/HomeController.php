@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../core/session.php';
-require_once 'controller.php';
+require_once __DIR__ . '/../../core/ession.php';
+require_once 'Controller.php';
 
 class HomeController extends Controller {
     

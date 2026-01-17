@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../models/database.php';
-require_once __DIR__ . '/../models/coach.php';
-require_once __DIR__ . '/../models/seance.php';
-require_once __DIR__ . '/../models/reservation.php';
+require_once __DIR__ . '/../Models/Database.php';
+require_once __DIR__ . '/../Models/Coach.php';
+require_once __DIR__ . '/../Models/Seance.php';
+require_once __DIR__ . '/../Models/Reservation.php';
 require_once 'Controller.php';
 
 class SportifController extends Controller {
@@ -11,7 +11,7 @@ class SportifController extends Controller {
     private function checkAuth() {
         session_start();
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'sportif') {
-            $this->redirect('/coachproV3/public/index.php?url=auth/login');
+            $this->redirect('/coachpro_V3/public/index.php?url=auth/login');
         }
     }
 
@@ -56,7 +56,7 @@ class SportifController extends Controller {
         $reservationModel = new Reservation();
         $reservationModel->create($data);
 
-        $this->redirect('/coachproV3/public/index.php?url=sportif/history');
+        $this->redirect('/CoachPro_V3/public/index.php?url=sportif/history');
     }
 
     public function history()

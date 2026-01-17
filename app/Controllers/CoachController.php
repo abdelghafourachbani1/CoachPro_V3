@@ -1,12 +1,12 @@
 <?php
 
-require_once __DIR__ . '/../models/database.php';
-require_once __DIR__ . '/../models/coach.php';
-require_once __DIR__ . '/../models/seance.php';
-require_once __DIR__ . '/../models/reservation.php';
-require_once __DIR__ . '/../../core/security.php';
-require_once __DIR__ . '/../../core/session.php';
-require_once __DIR__ . '/../../core/validator.php';
+require_once __DIR__ . '/../Models/Database.php';
+require_once __DIR__ . '/../Models/Coach.php';
+require_once __DIR__ . '/../Models/Seance.php';
+require_once __DIR__ . '/../Models/Reservation.php';
+require_once __DIR__ . '/../../core/Security.php';
+require_once __DIR__ . '/../../core/Session.php';
+require_once __DIR__ . '/../../core/Validator.php';
 require_once 'Controller.php';
 
 class CoachController extends Controller {
@@ -18,7 +18,7 @@ class CoachController extends Controller {
     private function checkAuth() {
         if (!Security::isAuthenticated() || !Security::hasRole('coach')) {
             Session::setFlash('error', 'Accès interdit');
-            $this->redirect('/coachproV3/public/index.php?url=auth/login');
+            $this->redirect('/CoachPro_V3/public/index.php?url=auth/login');
         }
     }
 
@@ -60,7 +60,7 @@ class CoachController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
                 Session::setFlash('error', 'Token CSRF invalide');
-                $this->redirect('/coachproV3/public/index.php?url=coach/addSeance');
+                $this->redirect('/CoachPro_V3/public/index.php?url=coach/addSeance');
             }
 
             $data = Security::sanitize($_POST);
@@ -80,14 +80,14 @@ class CoachController extends Controller {
             if ($validator->fails()) {
                 Session::set('errors', $validator->errors());
                 Session::set('old', $data);
-                $this->redirect('/coachproV3/public/index.php?url=coach/addSeance');
+                $this->redirect('/CoachPro_V3/public/index.php?url=coach/addSeance');
             }
 
             $today = date('Y-m-d');
             if ($data['date_seance'] < $today) {
                 Session::setFlash('error', 'La date doit être dans le futur');
                 Session::set('old', $data);
-                $this->redirect('/coachproV3/public/index.php?url=coach/addSeance');
+                $this->redirect('/CoachPro_V3/public/index.php?url=coach/addSeance');
             }
 
             $db = Database::getInstance()->getConnection();
@@ -101,7 +101,7 @@ class CoachController extends Controller {
             $seanceModel = new Seance();
             if ($seanceModel->create($data)) {
                 Session::setFlash('success', 'Séance créée avec succès');
-                $this->redirect('/coachproV3/public/index.php?url=coach/seances');
+                $this->redirect('/CoachPro_V3/public/index.php?url=coach/seances');
             }
         } else {
             $token = Security::generateToken();
@@ -116,13 +116,13 @@ class CoachController extends Controller {
 
         if (!$id) {
             Session::setFlash('error', 'Séance introuvable');
-            $this->redirect('/coachproV3/public/index.php?url=coach/seances');
+            $this->redirect('/CoachPro_V3/public/index.php?url=coach/seances');
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!Security::validateToken($_POST['csrf_token'] ?? '')) {
                 Session::setFlash('error', 'Token CSRF invalide');
-                $this->redirect('/coachproV3/public/index.php?url=coach/editSeance&id=' . $id);
+                $this->redirect('/CoachPro_V3/public/index.php?url=coach/editSeance&id=' . $id);
             }
 
             $data = Security::sanitize($_POST);
@@ -141,13 +141,13 @@ class CoachController extends Controller {
             if ($validator->fails()) {
                 Session::set('errors', $validator->errors());
                 Session::set('old', $data);
-                $this->redirect('/coachproV3/public/index.php?url=coach/editSeance&id=' . $id);
+                $this->redirect('/CoachPro_V3/public/index.php?url=coach/editSeance&id=' . $id);
             }
 
             $seanceModel = new Seance();
             if ($seanceModel->update($id, $data)) {
                 Session::setFlash('success', 'Séance modifiée avec succès');
-                $this->redirect('/coachproV3/public/index.php?url=coach/seances');
+                $this->redirect('/CoachPro_V3/public/index.php?url=coach/seances');
             }
         } else {
             $seanceModel = new Seance();
@@ -168,7 +168,7 @@ class CoachController extends Controller {
 
         if (!Security::validateToken($token)) {
             Session::setFlash('error', 'Token CSRF invalide');
-            $this->redirect('/coachproV3/public/index.php?url=coach/seances');
+            $this->redirect('/CoachPro_V3/public/index.php?url=coach/seances');
         }
 
         if ($id) {
@@ -180,7 +180,7 @@ class CoachController extends Controller {
             }
         }
 
-        $this->redirect('/coachproV3/public/index.php?url=coach/seances');
+        $this->redirect('/CoachPro_V3/public/index.php?url=coach/seances');
     }
 
     public function reservations() {
